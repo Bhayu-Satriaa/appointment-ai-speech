@@ -1,0 +1,278 @@
+/* ==========================================================================
+   Back office — gaya tabel & panel admin
+   Memakai token warna dari app.css
+   ========================================================================== */
+
+.admin-shell {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* --------------------------------------------------------------- Sidebar */
+.admin-nav {
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.admin-nav__label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+  padding: var(--space-2) var(--space-3);
+}
+.admin-nav__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--color-foreground);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: background var(--transition), border-color var(--transition);
+}
+.admin-nav__link svg { width: 18px; height: 18px; flex: none; }
+.admin-nav__link:hover { background: var(--color-muted); }
+.admin-nav__link[aria-current="page"] {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  border-left-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.admin-nav__foot { margin-top: auto; padding: var(--space-3); }
+
+/* ------------------------------------------------------------------ Konten */
+.admin-main {
+  padding: var(--space-5);
+  min-height: 0;              /* penting: biar panel ini yang menggulir, bukan melebar */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.admin-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.admin-head h1 { font-family: var(--font-heading); font-size: var(--text-xl); font-weight: 700; letter-spacing: -0.01em; }
+.admin-head p { font-size: var(--text-sm); color: var(--color-muted-foreground); }
+
+/* ------------------------------------------------------------- Statistik */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.stat-card__label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted-foreground);
+}
+.stat-card__value { font-family: var(--font-heading); font-size: 1.75rem; font-weight: 700; line-height: 1.1; }
+.stat-card__hint { font-size: var(--text-xs); color: var(--color-muted-foreground); }
+.stat-card--accent .stat-card__value { color: var(--color-accent); }
+.stat-card--warning .stat-card__value { color: var(--color-destructive); }
+
+/* ----------------------------------------------------------------- Panel */
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.panel__head {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.panel__title { font-family: var(--font-heading); font-size: var(--text-lg); font-weight: 700; }
+.panel__body { padding: var(--space-4) var(--space-5) var(--space-5); }
+
+/* ---------------------------------------------------------------- Toolbar */
+.toolbar {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.field { display: flex; flex-direction: column; gap: var(--space-1); }
+.field label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted-foreground);
+}
+.field input, .field select {
+  font-family: inherit;
+  font-size: var(--text-sm);
+  padding: 9px var(--space-3);
+  min-height: 40px;
+  color: var(--color-foreground);
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ring) 22%, transparent);
+}
+.field--grow { flex: 1; min-width: 180px; }
+
+/* ------------------------------------------------------------------ Tabel */
+.tabel-wrap { overflow-x: auto; }
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+table.data th {
+  text-align: left;
+  padding: var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted-foreground);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+table.data td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-muted);
+  vertical-align: top;
+}
+table.data tbody tr:hover { background: var(--color-background); }
+table.data th a { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
+
+.kode {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: var(--text-xs);
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+.muted { color: var(--color-muted-foreground); }
+.nowrap { white-space: nowrap; }
+
+/* ------------------------------------------------------------------- Pill */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.pill--terkonfirmasi { background: color-mix(in srgb, var(--color-primary) 16%, transparent); color: var(--color-primary); }
+.pill--selesai { background: color-mix(in srgb, var(--color-accent) 16%, transparent); color: var(--color-accent); }
+.pill--batal { background: color-mix(in srgb, var(--color-destructive) 14%, transparent); color: var(--color-destructive); }
+.pill--suara { background: color-mix(in srgb, var(--color-secondary) 26%, transparent); color: var(--color-foreground); }
+.pill--chat { background: var(--color-muted); color: var(--color-muted-foreground); }
+
+/* ------------------------------------------------------------------ Aksi */
+.aksi { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.btn-mini {
+  font-family: inherit;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  padding: 6px var(--space-2);
+  min-height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  transition: background var(--transition);
+}
+.btn-mini:hover { background: var(--color-muted); }
+.btn-mini--ok { border-color: color-mix(in srgb, var(--color-accent) 45%, transparent); color: var(--color-accent); }
+.btn-mini--ok:hover { background: color-mix(in srgb, var(--color-accent) 14%, transparent); }
+.btn-mini--danger { border-color: color-mix(in srgb, var(--color-destructive) 45%, transparent); color: var(--color-destructive); }
+.btn-mini--danger:hover { background: color-mix(in srgb, var(--color-destructive) 12%, transparent); }
+
+/* ------------------------------------------------------------- Paginasi */
+.paginasi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+  color: var(--color-muted-foreground);
+}
+.paginasi__angka { display: flex; gap: var(--space-1); flex-wrap: wrap; }
+.paginasi__angka a, .paginasi__angka span {
+  min-width: 36px; min-height: 36px;
+  display: grid; place-items: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  color: var(--color-foreground);
+  padding: 0 var(--space-2);
+}
+.paginasi__angka .aktif { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+.paginasi__angka .mati { opacity: 0.45; }
+
+/* ----------------------------------------------------------- Notifikasi */
+.flash {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  color: var(--color-accent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+/* --------------------------------------------------------------- Bar mini */
+.bar-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.bar-row { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2); align-items: center; }
+.bar-row__top { grid-column: 1 / -1; display: flex; justify-content: space-between; font-size: var(--text-sm); }
+.bar-track { height: 8px; border-radius: var(--radius-pill); background: var(--color-muted); overflow: hidden; }
+.bar-fill { height: 100%; background: var(--color-primary); border-radius: var(--radius-pill); }
+
+/* ------------------------------------------------------------ Responsif */
+@media (max-width: 900px) {
+  .admin-shell { grid-template-columns: minmax(0, 1fr); }
+  .admin-nav {
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+    flex-direction: row;
+    overflow-x: auto;
+    padding: var(--space-3);
+  }
+  .admin-nav__label, .admin-nav__foot { display: none; }
+  .admin-nav__link { white-space: nowrap; }
+  .admin-main { padding: var(--space-4); }
+}
