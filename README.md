@@ -47,6 +47,12 @@ Cara paling cepat menyiapkan PHP + MySQL di Windows adalah memasang **Laragon**
 
 ## Cara Menjalankan
 
+> **Baru pertama kali menyiapkan?** Ikuti **[PANDUAN_SETUP.md](PANDUAN_SETUP.md)** —
+> langkah demi langkah dari clone sampai chat dan fitur suara berjalan, lengkap
+> dengan cara mendapatkan API key dan daftar pemecahan masalah.
+>
+> Bagian di bawah ini adalah ringkasannya.
+
 ### 1. Clone
 
 ```bash

@@ -58,6 +58,10 @@ return [
         'api_key' => env('GEMINI_API_KEY'),
         'model' => env('GEMINI_LIVE_MODEL', 'models/gemini-2.5-flash-native-audio-preview-12-2025'),
         'voice' => env('GEMINI_LIVE_VOICE', 'Kore'),
+        // Kirim expireTime/newSessionExpireTime dari jam komputer ini?
+        // Bawaan: tidak. Waktu dihitung dari jam lokal, jadi jam yang melenceng
+        // bisa membuat token dianggap kedaluwarsa sejak dibuat.
+        'kirim_waktu_token' => (bool) env('GEMINI_KIRIM_WAKTU_TOKEN', false),
     ],
 
 ];

@@ -47,18 +47,25 @@ class LiveController extends Controller
             return response()->json(['ok' => false, 'error' => 'GEMINI_API_KEY belum diisi di .env'], 422);
         }
 
-        $kedaluwarsa = Carbon::now()->addMinutes(30)->utc()->format('Y-m-d\TH:i:s\Z');
-        $batasSesiBaru = Carbon::now()->addMinute()->utc()->format('Y-m-d\TH:i:s\Z');
+        // Waktu kedaluwarsa dihitung dari jam KOMPUTER INI. Kalau jamnya melenceng
+        // dari jam Google, token bisa dianggap sudah kedaluwarsa sejak dibuat —
+        // gejalanya "token expired" padahal key-nya benar. Karena itu secara bawaan
+        // kita tidak mengirim waktu sama sekali dan membiarkan Google memakai
+        // nilai bawaannya, yang dihitung dari jam mereka sendiri.
+        $muatan = ['uses' => 1];
+
+        if (config('services.gemini.kirim_waktu_token')) {
+            $kedaluwarsa = Carbon::now()->addMinutes(30)->utc()->format('Y-m-d\TH:i:s\Z');
+            $batasSesiBaru = Carbon::now()->addMinutes(5)->utc()->format('Y-m-d\TH:i:s\Z');
+            $muatan['expireTime'] = $kedaluwarsa;
+            $muatan['newSessionExpireTime'] = $batasSesiBaru;
+        }
 
         try {
             $respon = Http::withHeaders(['x-goog-api-key' => $key])
                 ->timeout(30)
                 ->acceptJson()
-                ->post(self::AUTH_TOKENS_URL, [
-                    'uses' => 1,
-                    'expireTime' => $kedaluwarsa,
-                    'newSessionExpireTime' => $batasSesiBaru,
-                ]);
+                ->post(self::AUTH_TOKENS_URL, $muatan);
 
             if (! $respon->successful()) {
                 Log::warning('Gagal membuat ephemeral token', [
@@ -80,7 +87,7 @@ class LiveController extends Controller
                 'model' => (string) config('services.gemini.model'),
                 'voice' => (string) config('services.gemini.voice'),
                 'ws_url' => self::WS_URL,
-                'berlaku_sampai' => $kedaluwarsa,
+                'berlaku_sampai' => $data['expireTime'] ?? null,
             ]);
         } catch (\Throwable $e) {
             Log::error('Exception ephemeral token', ['pesan' => $e->getMessage()]);

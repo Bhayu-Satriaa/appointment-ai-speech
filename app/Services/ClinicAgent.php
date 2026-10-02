@@ -36,7 +36,7 @@ class ClinicAgent
 
             if (! $respon['ok']) {
                 return [
-                    'balasan' => 'Maaf, sistem sedang ada gangguan. Coba lagi sebentar ya.',
+                    'balasan' => $this->petunjukKesalahan((string) $respon['error']),
                     'tool' => $jejakTool,
                     'sumber' => $sumber,
                     'error' => $respon['error'],
@@ -154,6 +154,50 @@ class ClinicAgent
 
             return ['ok' => false, 'error' => $e->getMessage()];
         }
+    }
+
+    /**
+     * Mengubah kegagalan panggilan model menjadi petunjuk yang bisa langsung
+     * dikerjakan. Penting bagi siapa pun yang baru meng-clone: tanpa ini,
+     * kesalahan konfigurasi hanya tampil sebagai "sistem sedang ada gangguan"
+     * dan penyebabnya harus dicari sendiri di log.
+     */
+    private function petunjukKesalahan(string $galat): string
+    {
+        $g = mb_strtolower($galat);
+
+        if (str_contains($g, 'expired') || str_contains($g, 'kadaluarsa')) {
+            return 'Kunci API model sudah kedaluwarsa. Ganti LLM_API_KEY di file .env.';
+        }
+
+        if (str_contains($g, '401') || str_contains($g, '403') || str_contains($g, 'unauthorized')
+            || str_contains($g, 'api key') || str_contains($g, 'invalid_api_key')) {
+            return 'Kunci API model ditolak. Periksa LLM_API_KEY dan LLM_BASE_URL di file .env.';
+        }
+
+        if (str_contains($g, '404') || str_contains($g, 'model_not_found') || str_contains($g, 'not found')) {
+            return 'Model tidak ditemukan. Periksa LLM_MODEL dan LLM_BASE_URL di file .env.';
+        }
+
+        if (str_contains($g, '429') || str_contains($g, 'quota') || str_contains($g, 'rate limit')) {
+            return 'Kuota penyedia model sedang habis. Coba lagi beberapa saat lagi.';
+        }
+
+        if (str_contains($g, 'could not resolve') || str_contains($g, 'connection refused')
+            || str_contains($g, 'curl error 7') || str_contains($g, 'failed to connect')) {
+            return 'Tidak bisa menghubungi penyedia model. Periksa LLM_BASE_URL di file .env — '
+                .'alamat seperti 127.0.0.1 hanya berlaku di komputer tempat server itu berjalan.';
+        }
+
+        if (str_contains($g, 'timed out') || str_contains($g, 'timeout') || str_contains($g, 'curl error 28')) {
+            return 'Penyedia model tidak merespons tepat waktu. Coba lagi.';
+        }
+
+        if (preg_match('/\b5\d\d\b/', $g)) {
+            return 'Penyedia model sedang bermasalah (server mereka). Coba lagi sebentar lagi.';
+        }
+
+        return 'Maaf, sistem sedang ada gangguan. Coba lagi sebentar ya.';
     }
 
     public function systemPrompt(): string
